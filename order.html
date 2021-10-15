@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bethany's Pie Shop</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <style>
+        .pie{
+            margin-bottom: 20px;
+        }
+        .input-group{
+            margin-bottom: 20px;
+        }
+        .input-group input, .input-group textarea, .input-group select{
+            padding: 10px;
+            border:  solid 1px #999;
+            border-radius: 2px;
+            width: 100%;
+        }
+        label{
+            font-weight: 600;
+        }
+        input[type="reset"]{
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        input[type="submit"]{
+            border: 1px solid #999;
+            border-radius: 3px;
+            padding: 10px;
+        }
+        @media only screen and (min-width: 768px) {
+            article{
+            width: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <li><a href="/">Home</a></li>
+            <li><a href="pies.html">Pies</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </nav>
+    </header>
+    <main>
+        <aside><img src="images/logo.png" alt="Bethany's Pie Shop"></aside>
+        <article>
+            <h1>Order</h1>
+            <div class="pie">
+                <img src="">
+                <div class="columns">
+                    <div class="title"></div>
+                    <div class="price"></div>
+                </div>
+                <p class="desc"></p>
+            </div>
+            <form action="http://localhost:7071/api/post" method="post">
+                <input type="hidden" id="pie-order" name="pie-order">
+                <div class="input-group">
+                    <div><label for="first-name">First name</label></div>
+                    <div><input type="text" id="first-name" name="first-name"></div>
+                </div>
+                <div class="input-group">
+                    <div><label for="last-name">Last name</label></div>
+                    <div><input type="text" id="last-name" name="last-name"></div>
+                </div>
+                <div class="input-group">
+                    <div><label for="address">Address</label></div>
+                    <div><input type="text" id="address" name="address"></div>
+                </div>
+                <div class="input-group">
+                    <div><label for="state">State</label></div>
+                    <div>
+                        <select id="state" name="state">
+                            <option value="" selected>[ Select one ]</option>
+                            <option value="Lagos">Lagos</option>
+                            <option value="Ogun">Ogun</option>
+                            <option value="Abuja">Abuja</option>
+                            <option value="Port Harcourt">Port Harcourt</option>
+                            <option value="Ibadan">Ibadan</option>
+                            <option value="Kaduna">Kaduna</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div><label for="postal-code">Postal code</label></div>
+                    <div><input type="text" id="postal-code" name="postal-code"></div>
+                </div>
+                <div class="input-group">
+                    <div><label for="comments">Comments</label></div>
+                    <div>
+                        <textarea name="comments" id="comments" cols="30" rows="10"></textarea>
+                    </div>
+                </div>
+                <input type="reset" value="Reset">
+                <input type="submit" value="Order">
+            </form>
+        </article>
+    </main>
+    <footer>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="pies.html">Pies</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </footer>
+</body>
+<script type="text/javascript">
+
+    window.addEventListener("DOMContentLoaded", function(e) {
+
+      let locationBox = document.querySelector("#location");
+      let location = {
+        latitude: "unknown",
+        longitude: "unknown"
+      };
+
+      window.navigator.geolocation.getCurrentPosition(
+        function(position) {
+
+          location = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+
+          locationBox.value = JSON.stringify(location);
+        },
+        function(error) {
+          locationBox.value = JSON.stringify(location);
+        });
+
+      const order = localStorage.getItem("order");
+      const pieOrder = JSON.parse(order);
+
+      if (order) {
+        const pie = document.querySelector(".pie");
+        const title = pie.querySelector(".title");
+        const price = pie.querySelector(".price");
+        const desc = pie.querySelector(".desc");
+        const orderInput = document.querySelector("#pie-order");
+
+        title.innerText = pieOrder.title;
+        price.innerText = pieOrder.price;
+        desc.innerText = pieOrder.desc;
+
+        orderInput.value = order;
+
+        const img = pie.querySelector("img");
+        img.setAttribute("src", `images/${pieOrder.id}.png`);
+        img.setAttribute("alt", pieOrder.title);
+      }
+    });
+  </script>
+</html>
